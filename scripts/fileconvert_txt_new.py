@@ -1,30 +1,20 @@
 import pandas as pd
 
 import os
-inpath = r"C:\Users\abhij\OneDrive\Desktop\Personal folder\Academics\Internships\Harvard internship\Files\Case data files\injector full\XY plots"
-outpath= "C:\\Users\\abhij\\OneDrive\\Desktop\\"
+inpath = "C:\\Users\\abhij\\OneDrive\\Desktop\\Personal folder\\Academics\\Internships\\Harvard internship\\Files\\Case data files\\injector full\\XY plots\\turbulent kinetic energy"
+outpath= r"C:\Users\abhij\OneDrive\Desktop"
 dirs = os.listdir(inpath)
 string = "xy/key/label"
-d = 0
-n= len(dirs)
-while d in range(n):
-    k = dirs[d] 
-
-    if (dirs[d].find("Sensor") == -1):
-        del(dirs[d])
-        n= len(dirs)
-    else:
-        d += 1
-
 for i in dirs:
-    current = inpath + "\\" + i 
+    #current = inpath + "\\" + i + "\\Results\\XY plots"
+    current = inpath
     listdfs = []
     indirs = os.listdir(current)
     for j in indirs:
         f = open(current +"\\" + j , "r")
         k = f.readlines()
         print(k)
-        title = j.replace("ms.dat","")
+        title = k[1].replace("Series 1 at /LINE:","")
         
         data = k[5:-2]
         for d in range(len(data)):
@@ -38,11 +28,13 @@ for i in dirs:
         print(listdfs)
         print("listdfs printed")
     filename = i + '.xlsx'
-    with pd.ExcelWriter(outpath + filename) as writer:
-        for dataframe in listdfs:
-            print(dataframe[1][0])
-            dataframe.to_excel(writer,dataframe[1][0])
-        writer.save()
+    writer = pd.ExcelWriter(outpath, engine='xlsxwriter')
+    for dataframe in listdfs:
+        print(dataframe[1][0])
+        dataframe[0].to_excel(writer, sheet_name=dataframe[1])
+    writer.save()
+    writer.close()
+    writer.handles = None
        
        
         

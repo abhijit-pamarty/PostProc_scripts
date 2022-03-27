@@ -1,13 +1,13 @@
 import pandas as pd
 import numpy as np
 import os
-inpath = "C:\\Users\\abhij\\OneDrive\\Desktop\\Personal folder\\Academics\\Internships\\Harvard internship\\Files\\Case data files\\inlet as obstruction\\turbulent kinetic energy\\combined"
+inpath = r"C:\Users\abhij\OneDrive\Desktop\Personal folder\Academics\Internships\Harvard internship\Files\Case data files\injector full\Combined files\Combined new"
 outpath = "C:\\Users\\abhij\\OneDrive\\Desktop\\TKE.xlsx"
 dirs = os.listdir(inpath)
 d = 0
 listdfs = []
 while d in range(len(dirs)):
-    if (dirs[d].find("sensor") == -1):
+    if (dirs[d].find("Sensor") == -1):
         del(dirs[d])
     d += 1
 for direc in dirs:
@@ -18,15 +18,15 @@ for direc in dirs:
     
     for sheet in dfs:
         
-        arr = dfs[sheet][[0,1]].dropna()
+        arr = dfs[sheet][[0,1]].dropna(0)
         arr = arr.iloc[1: , :]
         narr = pd.DataFrame.to_numpy(arr)
         narr = narr.astype(np.float)
-        narr[:,0] = np.abs(narr[:,0])
+        narr[:,1] = np.abs(narr[:,1])
         print("currently processing : ", direc, "\\", sheet)
-        max_TKE = np.max(narr, 0)[0]
-        av_TKE = np.average(narr, 0)[0]
-        min_TKE = np.min(narr, 0)[0]
+        max_TKE = np.max(narr, 0)[1]
+        av_TKE = np.average(narr, 0)[1]
+        min_TKE = np.min(narr, 0)[1]
         
         subdf = pd.DataFrame({'Title' :[sheet], 'Maximum turbulent KE': [max_TKE], 'Minimum turbulent KE': [min_TKE], 'Average turbulent KE': [av_TKE]})
         BLdf = BLdf.append(subdf, ignore_index = True)
